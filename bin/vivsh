@@ -1,0 +1,14 @@
+# NOTES: Wish the following things worked:
+#
+# - Attempt to use xtclsh directly or using #! in scripts did not work
+#   Not sure how to load vivado libraries in xtclsh automatically
+#
+# - So, have to invoke 'vivado -mode batch' which is slow and also requires
+#   x11 libraries, even though you may not want to use the gui. Also it does
+#   not work in #! way
+#
+# - So all we can do is to pass tcl scripts to vivado (1 or more) using this
+#   command. There is no notion of search path, so please qualify the tcl
+#   script names fully
+
+exec vivado -mode batch -source $*
