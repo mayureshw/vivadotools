@@ -1,0 +1,10 @@
+# Executes a single tcl command and puts output on stdout
+# Most typical usage is 'help <cmd>', but not restricted to that
+
+TMPFILE=`mktemp`
+
+trap "rm $TMPFILE" exit
+
+echo "puts [$@]" > $TMPFILE
+
+vivsh $TMPFILE
