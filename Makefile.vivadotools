@@ -1,0 +1,62 @@
+# Instructions to use
+#
+# Set following environment variables (see error messages below for more explanation)
+#  - VIVADOTOOLSDIR
+#  - VIVADOINSTALLDIR
+#
+# In your application make flile (see examples/Makefile)
+#  - Define variable SRCS
+#  - Define variable TOP
+#  - include this Makefile
+#
+# Run make with one of the supported targets. Running without target will show
+# supported targets.
+
+ifndef VIVADOTOOLSDIR
+$(error Please set environment variable VIVADOTOOLSDIR to point to vivadotools directory)
+endif
+
+ifndef VIVADOINSTALLDIR
+$(error Please set environment variable VIVADOINSTALLDIR to point to vivado installation directory up to vivado version, e.g. /opt/xilinx/Vivado/2022.2)
+endif
+
+ifndef SRCS
+$(error In your Makefile define variable SRCS to include all .v, .vhdl, .xdc source files)
+endif
+
+ifndef TOP
+$(error In your Makefile define variable TOP to identify the top module)
+endif
+
+VIVADOTOOLSBINDIR	=	$(VIVADOTOOLSDIR)/bin
+
+export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
+#export	LD_LIBRARY_PATH	:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
+
+# Unfortunately no checkpoint representation for "elaboration" step
+# So we start targets from synth
+all:
+	@echo "Please specify target: synth|place|route|bits|clean|dcpclean"
+
+synth: $(TOP).synth.dcp
+place: $(TOP).place.dcp
+route: $(TOP).route.dcp
+bits: $(TOP).bits
+
+$(TOP).synth.dcp:	$(SRCS)
+	SRCS="$(SRCS)" TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
+
+$(TOP).place.dcp:	$(TOP).synth.dcp
+	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/place.tcl
+
+$(TOP).route.dcp:	$(TOP).place.dcp
+	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/route.tcl
+
+$(TOP).bits:	$(TOP).route.dcp
+	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bits.tcl
+
+clean:
+	rm -f *.jou *.log
+
+dcpclean:
+	rm -f *.dcp *.bits

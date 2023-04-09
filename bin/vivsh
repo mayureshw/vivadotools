@@ -1,3 +1,11 @@
+export LD_LIBRARY_PATH=$VIVADOINSTALLDIR/lib/lnx64.o
+
+if [ `uname` = NetBSD ]
+then
+    export PATH=/emul/linux/bin:/emul/linux/usr/bin:$PATH
+    export LD_LIBRARY_PATH=/emul/linux/lib64:$LD_LIBRARY_PATH
+fi
+
 # NOTES: Wish the following things worked:
 #
 # - Attempt to use xtclsh directly or using #! in scripts did not work
