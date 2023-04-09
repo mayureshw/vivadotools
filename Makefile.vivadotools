@@ -7,6 +7,7 @@
 # In your application make flile (see examples/Makefile)
 #  - Define variable SRCS
 #  - Define variable TOP
+#  - Define variable PARTNAME (optional)
 #  - include this Makefile
 #
 # Run make with one of the supported targets. Running without target will show
@@ -44,7 +45,7 @@ route: $(TOP).route.dcp
 bit: $(TOP).bit
 
 $(TOP).synth.dcp:	$(SRCS)
-	SRCS="$(SRCS)" TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
+	SRCS="$(SRCS)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
 
 $(TOP).place.dcp:	$(TOP).synth.dcp
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/place.tcl
