@@ -36,12 +36,12 @@ export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 # Unfortunately no checkpoint representation for "elaboration" step
 # So we start targets from synth
 all:
-	@echo "Please specify target: synth|place|route|bits|clean|dcpclean"
+	@echo "Please specify target: synth|place|route|bit|clean|dcpclean"
 
 synth: $(TOP).synth.dcp
 place: $(TOP).place.dcp
 route: $(TOP).route.dcp
-bits: $(TOP).bits
+bit: $(TOP).bit
 
 $(TOP).synth.dcp:	$(SRCS)
 	SRCS="$(SRCS)" TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
@@ -52,11 +52,11 @@ $(TOP).place.dcp:	$(TOP).synth.dcp
 $(TOP).route.dcp:	$(TOP).place.dcp
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/route.tcl
 
-$(TOP).bits:	$(TOP).route.dcp
-	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bits.tcl
+$(TOP).bit:	$(TOP).route.dcp
+	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit.tcl
 
 clean:
 	rm -f *.jou *.log
 
 dcpclean:
-	rm -f *.dcp *.bits
+	rm -f *.dcp *.bit
