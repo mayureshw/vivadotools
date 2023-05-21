@@ -18,9 +18,10 @@ sed -n '/^library/p' $SRCS | sort -u
 echo
 sed -n '/^use/p' $SRCS | grep -vw $PKGNAME | sort -u
 echo
+echo package $PKGNAME is
+echo
 
-awk -v PKGNAME=$PKGNAME '
-BEGIN { print "package " PKGNAME " is\n" }
+awk '
 /^entity/ {
     GO = 1
     gsub("entity","component")
@@ -33,7 +34,8 @@ BEGIN { print "package " PKGNAME " is\n" }
     print $0 "\n"
     }
 GO { print }
-END { print "end package;" }
 ' $SRCS
+
+echo "end package;"
 
 )
