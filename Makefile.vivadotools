@@ -61,7 +61,7 @@ bit2hw:	$(TOP).bit
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit2hw.tcl
 
 $(PACKAGE).vhdl:	$(SRCS)
-	$(VIVADOTOOLSBINDIR)/vhdl2components.sh $(PACKAGE) $(SRCS) > $@
+	$(VIVADOTOOLSBINDIR)/vhdl2components.sh $(PACKAGE) $(filter %.vhdl, $(SRCS)) > $@
 
 clean:
 	rm -f *.jou *.log

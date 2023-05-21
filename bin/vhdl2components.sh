@@ -16,7 +16,7 @@ SRCS=$*
 (
 sed -n '/^library/p' $SRCS | sort -u
 echo
-sed -n '/^use/p' $SRCS | sort -u
+sed -n '/^use/p' $SRCS | grep -vw $PKGNAME | sort -u
 echo
 
 awk -v PKGNAME=$PKGNAME '
