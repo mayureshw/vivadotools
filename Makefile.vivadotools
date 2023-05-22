@@ -5,7 +5,8 @@
 #  - VIVADOINSTALLDIR
 #
 # In your application make flile (see examples/Makefile)
-#  - Define variable SRCS
+#  - Define variable PACKAGE (make sure to not hand write $PACKAGE.vhdl, as it will be overwritten)
+#  - Define variable SRCS (excluding $PACKAGE.vhdl)
 #  - Define variable TOP
 #  - Define variable PARTNAME (optional)
 #  - include this Makefile
@@ -32,7 +33,9 @@ endif
 VIVADOTOOLSBINDIR	=	$(VIVADOTOOLSDIR)/bin
 
 export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
-#export	LD_LIBRARY_PATH	:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
+
+SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
+
 
 # Unfortunately no checkpoint representation for "elaboration" step
 # So we start targets from synth
@@ -45,8 +48,8 @@ route: $(TOP).route.dcp
 bit: $(TOP).bit
 package: $(PACKAGE).vhdl
 
-$(TOP).synth.dcp:	$(SRCS)
-	SRCS="$(SRCS)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
+$(TOP).synth.dcp:	$(SRCS_W_PKG)
+	SRCS="$(SRCS_W_PKG)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
 
 $(TOP).place.dcp:	$(TOP).synth.dcp
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/place.tcl
@@ -61,7 +64,7 @@ bit2hw:	$(TOP).bit
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit2hw.tcl
 
 $(PACKAGE).vhdl:	$(SRCS)
-	$(VIVADOTOOLSBINDIR)/vhdl2components.sh $(PACKAGE) $(filter %.vhdl, $(SRCS)) > $@
+	$(VIVADOTOOLSBINDIR)/vhdl2components.sh $(PACKAGE) $(SRCS) > $@
 
 clean:
 	rm -f *.jou *.log
