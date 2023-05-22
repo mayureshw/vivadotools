@@ -22,6 +22,7 @@ echo package $PKGNAME is
 echo
 
 awk '
+/\<attribute\>/ { next }
 /^entity/ {
     GO = 1
     gsub("entity","component")
