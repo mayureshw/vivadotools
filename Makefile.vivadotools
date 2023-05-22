@@ -67,7 +67,7 @@ $(PACKAGE).vhdl:	$(SRCS)
 	$(VIVADOTOOLSBINDIR)/vhdl2components.sh $(PACKAGE) $(SRCS) > $@
 
 clean:
-	rm -f *.jou *.log
+	rm -rf *.jou *.log .Xil
 
 dcpclean:
 	rm -f *.dcp *.bit
