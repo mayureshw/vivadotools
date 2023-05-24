@@ -21,6 +21,13 @@ echo
 echo package $PKGNAME is
 echo
 
+TYPESFILE=${PKGNAME}_types.vhdl
+if [ -f $TYPESFILE ]
+then
+    cat $TYPESFILE
+    echo
+fi
+
 awk '
 /\<attribute\>/ { next }
 /^entity/ {

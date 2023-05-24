@@ -11,6 +11,9 @@
 #  - Define variable PARTNAME (optional)
 #  - include this Makefile
 #
+# To include types in the package define type declarations in ${PACKAGE}_types.vhdl
+# and do not include this file in SRCS
+#
 # Run make with one of the supported targets. Running without target will show
 # supported targets.
 
@@ -35,6 +38,8 @@ VIVADOTOOLSBINDIR	=	$(VIVADOTOOLSDIR)/bin
 export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 
 SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
+
+TYPESFILE	=	$(PACKAGE)types.vhdl
 
 
 # Unfortunately no checkpoint representation for "elaboration" step
@@ -63,8 +68,11 @@ $(TOP).bit:	$(TOP).route.dcp
 bit2hw:	$(TOP).bit
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit2hw.tcl
 
-$(PACKAGE).vhdl:	$(SRCS)
+$(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE)
 	$(VIVADOTOOLSBINDIR)/vhdl2components.sh $(PACKAGE) $(SRCS) > $@
+
+# In case TYPESFILE is absent don't treat it as an error
+$(TYPESFILE):
 
 clean:
 	rm -rf *.jou *.log .Xil
