@@ -39,7 +39,7 @@ export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 
 SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
 
-TYPESFILE	=	$(PACKAGE)types.vhdl
+TYPESFILE	=	$(PACKAGE)_types.vhdl
 
 
 # Unfortunately no checkpoint representation for "elaboration" step
