@@ -5,7 +5,15 @@ set DCP         $TOP
 
 append DCP .synth.dcp
 
-add_files $SRCS
+foreach FILE $env(SRCS) {
+    set EXT [ file extension $FILE ]
+    if { $EXT == ".vhdl" } {
+        read_vhdl -vhdl2008 $FILE
+    } else {
+        add_files $FILE
+    }
+}
+
 set_property top $TOP [get_filesets sources_1]
 if { $PARTNAME != "" } {
     synth_design -rtl -part $PARTNAME
