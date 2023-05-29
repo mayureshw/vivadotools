@@ -6,9 +6,11 @@
 #
 # In your application make flile (see examples/Makefile)
 #  - Define variable PACKAGE (make sure to not hand write $PACKAGE.vhdl, as it will be overwritten)
-#  - Define variable SRCS (excluding $PACKAGE.vhdl)
+#  - Define variable SRCS (excluding $PACKAGE.vhdl and xdc files)
+#  - Optionally define variable XDCSRCS (.xdc files)
 #  - Define variable TOP
 #  - Define variable PARTNAME (optional)
+#  - Tune the UNISIMSDIR variable in this file if different from the default
 #  - include this Makefile
 #
 # To include types in the package define type declarations in ${PACKAGE}_types.vhdl
@@ -38,14 +40,18 @@ VIVADOTOOLSBINDIR	=	$(VIVADOTOOLSDIR)/bin
 export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 
 SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
+SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
 
 TYPESFILE	=	$(PACKAGE)_types.vhdl
+
+GHDLOPTS	=	--std=08 -frelaxed-rules
+UNISIMSDIR	=	/opt/xilinx/Vivado/2022.2/data/vhdl/src/unisims
 
 
 # Unfortunately no checkpoint representation for "elaboration" step
 # So we start targets from synth
 all:
-	@echo "Please specify target: synth|place|route|bit|bit2hw|clean|dcpclean|package"
+	@echo "Please specify target: synth|place|route|bit|bit2hw|clean|dcpclean|package|ghdl"
 
 synth: $(TOP).synth.dcp
 place: $(TOP).place.dcp
@@ -53,8 +59,8 @@ route: $(TOP).route.dcp
 bit: $(TOP).bit
 package: $(PACKAGE).vhdl
 
-$(TOP).synth.dcp:	$(SRCS_W_PKG)
-	SRCS="$(SRCS_W_PKG)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
+$(TOP).synth.dcp:	$(SRCS_W_XDC)
+	SRCS="$(SRCS_W_XDC)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
 
 $(TOP).place.dcp:	$(TOP).synth.dcp
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/place.tcl
@@ -79,3 +85,9 @@ clean:
 
 dcpclean:
 	rm -f *.dcp *.bit
+
+ghdl:	$(SRCS_W_PKG)
+	ghdl -i $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/unisim*.vhd
+	ghdl -i $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/primitive/*.vhd
+	ghdl -i $(GHDLOPTS) $(SRCS_W_PKG)
+	ghdl -m $(GHDLOPTS) $(TOP)
