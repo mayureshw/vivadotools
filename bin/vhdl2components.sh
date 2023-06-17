@@ -46,4 +46,11 @@ GO { print }
 
 echo "end package;"
 
+PBODYFILE=${PKGNAME}_pbody.vhdl
+if [ -f $PBODYFILE ]
+then
+    echo
+    cat $PBODYFILE
+fi
+
 )

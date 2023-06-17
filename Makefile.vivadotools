@@ -16,6 +16,9 @@
 # To include types in the package define type declarations in ${PACKAGE}_types.vhdl
 # and do not include this file in SRCS
 #
+# To include package body in the package define package body in ${PACKAGE}_pbody.vhdl
+# and do not include this file in SRCS
+#
 # Run make with one of the supported targets. Running without target will show
 # supported targets.
 
@@ -43,6 +46,7 @@ SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
 SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
 
 TYPESFILE	=	$(PACKAGE)_types.vhdl
+PBODYFILE	=	$(PACKAGE)_pbody.vhdl
 
 GHDLOPTS	=	--std=08 -frelaxed-rules
 UNISIMSDIR	=	/opt/xilinx/Vivado/2022.2/data/vhdl/src/unisims
@@ -79,11 +83,12 @@ $(TOP).bit:	$(TOP).route.dcp
 bit2hw:	$(TOP).bit
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit2hw.tcl
 
-$(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE)
+$(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
 	$(VIVADOTOOLSBINDIR)/vhdl2components.sh $(PACKAGE) $(SRCS) > $@
 
-# In case TYPESFILE is absent don't treat it as an error
+# In case these files are absent don't treat it as an error
 $(TYPESFILE):
+$(PBODYFILE):
 
 clean:
 	rm -rf *.jou *.log .Xil
