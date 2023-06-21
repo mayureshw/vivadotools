@@ -98,9 +98,10 @@ dcpclean:
 
 ghdl:	$(TOP) $(UNISIMOBJS)
 
+# If you upgrade ghdl delete this file and build again
 $(UNISIMOBJS):
-	ghdl -i $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/unisim*.vhd
-	ghdl -i $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/primitive/*.vhd
+	ghdl -a $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/unisim*.vhd
+	ghdl -a -fsynopsys $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/primitive/*.vhd
 
 $(TOP):	$(GHDLOBJS)
 	ghdl -m $(GHDLOPTS) $(TOP)
