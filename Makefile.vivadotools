@@ -60,12 +60,13 @@ GHDLOBJS	=	$(SRCS_W_PKG:.vhdl=.o)
 # Unfortunately no checkpoint representation for "elaboration" step
 # So we start targets from synth
 all:
-	@echo "Please specify target: synth|place|route|bit|bit2hw|clean|dcpclean|package|ghdl"
+	@echo "Please specify target: synth|place|route|bit|edif|bit2hw|clean|dcpclean|package|ghdl"
 
 synth: $(TOP).synth.dcp
 place: $(TOP).place.dcp
 route: $(TOP).route.dcp
 bit: $(TOP).bit
+edif: $(TOP).edif
 package: $(PACKAGE).vhdl
 
 $(TOP).synth.dcp:	$(SRCS_W_XDC)
@@ -79,6 +80,9 @@ $(TOP).route.dcp:	$(TOP).place.dcp
 
 $(TOP).bit:	$(TOP).route.dcp
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit.tcl
+
+$(TOP).edif:	$(TOP).route.dcp
+	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/edif.tcl
 
 bit2hw:	$(TOP).bit
 	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit2hw.tcl
