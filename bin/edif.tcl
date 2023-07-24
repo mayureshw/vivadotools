@@ -6,4 +6,4 @@ append DCP .edif
 
 create_project -in_memory
 open_checkpoint $LASTDCP
-write_edif DCP
+write_edif $DCP
