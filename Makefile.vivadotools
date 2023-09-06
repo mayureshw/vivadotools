@@ -5,7 +5,8 @@
 #  - VIVADOINSTALLDIR
 #
 # In your application make flile (see examples/Makefile)
-#  - Define variable PACKAGE (make sure to not hand write $PACKAGE.vhdl, as it will be overwritten)
+#  - (Optionally) Define variable PACKAGE
+#    (make sure to not hand write file $PACKAGE.vhdl, as it will be overwritten)
 #  - Define variable SRCS (excluding $PACKAGE.vhdl and xdc files)
 #  - Optionally define variable XDCSRCS (.xdc files)
 #  - Define variable TOP
@@ -42,7 +43,11 @@ VIVADOTOOLSBINDIR	=	$(VIVADOTOOLSDIR)/bin
 
 export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 
+ifdef PACKAGE
 SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
+else
+SRCS_W_PKG	=	$(SRCS)
+endif
 SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
 
 TYPESFILE	=	$(PACKAGE)_types.vhdl
