@@ -1,5 +1,5 @@
 if { $argc != 1 } {
-    puts "Pass vlnv string of the ip as an argument"
+    puts "args : <ip vlnv> (see iplist)"
     exit
     }
 set VLNV [lindex $argv 0]
