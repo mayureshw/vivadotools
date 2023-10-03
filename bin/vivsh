@@ -16,7 +16,30 @@ fi
 #   not work in #! way
 #
 # - So all we can do is to pass tcl scripts to vivado (1 or more) using this
-#   command. There is no notion of search path, so please qualify the tcl
-#   script names fully
+#   command. There is no notion of search path, so we look up cwd first
+#   followed by $VIVADOTOOLSDIR/bin. We also look for file by suffixing
+#   extension .tcl
 
-exec vivado -mode batch -source $*
+VIVADOTOOLSBINDIR=$VIVADOTOOLSDIR/bin
+
+SCRIPTS=""
+FOUND=0
+for SCRIPT in $*
+do
+    for SCRIPTPATH in $SCRIPT $SCRIPT.tcl $VIVADOTOOLSBINDIR/$SCRIPT $VIVADOTOOLSBINDIR/$SCRIPT.tcl
+    do
+        if [ -f $SCRIPTPATH ]
+        then
+            FOUND=1
+            break
+        fi
+    done
+    if [ $FOUND = 0 ]
+    then
+        echo "No script found: " $SCRIPT
+        exit 1
+    else
+        SCRIPTS=$SCRIPTS" "$SCRIPTPATH
+    fi
+done
+exec vivado -mode batch -source $SCRIPTS

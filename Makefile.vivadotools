@@ -75,25 +75,25 @@ edif: $(TOP).edif
 package: $(PACKAGE).vhdl
 
 $(TOP).synth.dcp:	$(SRCS_W_XDC)
-	SRCS="$(SRCS_W_XDC)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh $(VIVADOTOOLSBINDIR)/synth.tcl
+	SRCS="$(SRCS_W_XDC)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
 
 $(TOP).place.dcp:	$(TOP).synth.dcp
-	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/place.tcl
+	TOP=$(TOP) vivsh place
 
 $(TOP).route.dcp:	$(TOP).place.dcp
-	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/route.tcl
+	TOP=$(TOP) vivsh route
 
 $(TOP).bit:	$(TOP).route.dcp
-	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit.tcl
+	TOP=$(TOP) vivsh bit
 
 $(TOP).edif:	$(TOP).route.dcp
-	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/edif.tcl
+	TOP=$(TOP) vivsh edif
 
 bit2hw:	$(TOP).bit
-	TOP=$(TOP) vivsh $(VIVADOTOOLSBINDIR)/bit2hw.tcl
+	TOP=$(TOP) vivsh bit2hw
 
 $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
-	$(VIVADOTOOLSBINDIR)/vhdl2components.sh $(PACKAGE) $(SRCS) > $@
+	vhdl2components.sh $(PACKAGE) $(SRCS) > $@
 
 # In case these files are absent don't treat it as an error
 $(TYPESFILE):
