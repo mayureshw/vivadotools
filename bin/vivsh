@@ -22,24 +22,27 @@ fi
 
 VIVADOTOOLSBINDIR=$VIVADOTOOLSDIR/bin
 
-SCRIPTS=""
-FOUND=0
-for SCRIPT in $*
+SCRIPT=$1
+shift
+ARGS=$*
+
+for SCRIPTPATH in $SCRIPT $SCRIPT.tcl $VIVADOTOOLSBINDIR/$SCRIPT $VIVADOTOOLSBINDIR/$SCRIPT.tcl
 do
-    for SCRIPTPATH in $SCRIPT $SCRIPT.tcl $VIVADOTOOLSBINDIR/$SCRIPT $VIVADOTOOLSBINDIR/$SCRIPT.tcl
-    do
-        if [ -f $SCRIPTPATH ]
-        then
-            FOUND=1
-            break
-        fi
-    done
-    if [ $FOUND = 0 ]
+    if [ -f $SCRIPTPATH ]
     then
-        echo "No script found: " $SCRIPT
-        exit 1
-    else
-        SCRIPTS=$SCRIPTS" "$SCRIPTPATH
+        FOUND=1
+        break
     fi
 done
-exec vivado -mode batch -source $SCRIPTS
+if [ $FOUND = 0 ]
+then
+    echo "No script found: " $SCRIPT
+    exit 1
+fi
+
+if [ -z "$ARGS" ]
+then
+    exec vivado -mode batch -source $SCRIPTPATH
+else
+    exec vivado -mode batch -source $SCRIPTPATH -tclargs $ARGS
+fi

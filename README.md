@@ -66,9 +66,13 @@ To run the utility commands described here add $VIVADOTOOLSDIR/bin to your PATH 
 
 Utility commands can be run as 'vivsh <utility>' where utility is one of the following:
 
-1. listips
+1. iplist
 
     Lists the ips available with your installation
+
+2. iphelp <vlnv string of ip>
+
+    Prints help about the properties of ip identified by vlnv string (use iplist to see vlnv strings)
 
 # Wish list
 
