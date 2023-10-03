@@ -72,7 +72,7 @@ Utility commands can be run as 'vivsh <utility>' where utility is one of the fol
 
 2. iphelp <vlnv string of ip>
 
-    Prints help about the properties of ip identified by vlnv string (use iplist to see vlnv strings)
+    Prints help about the properties of ip identified by vlnv string (use iplist to see vlnv strings). The help includes the configurable properties and supported targets of the ip.
 
 # Wish list
 
