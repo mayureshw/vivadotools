@@ -24,9 +24,9 @@ This is a work in progress to build a CLI interface around Vivado software for F
 
     - For ModelSim to work you may need to install package libxft2:i386 manually.
 
-- Check out quartools package in a suitable directory. Again, it is not required to be in the same login where you normally work. It's better to keep it under at least a different path from your work directories. Set the environment variable QUARTOOLSDIR pointing to the root directory of the package. For example, if the package was cloned in $HOME/programs, you may want to add something like following to your shell's rc file:
+- Check out quartools package in a suitable directory. Again, it is not required to be in the same login where you normally work. It's better to keep it under at least a different path from your work directories. Set the environment variable VIVADOTOOLSDIR pointing to the root directory of the package. For example, if the package was cloned in $HOME/programs, you may want to add something like following to your shell's rc file:
 
-    - export QUARTOOLSDIR=$HOME/programs/quartools
+    - export VIVADOTOOLSDIR=$HOME/programs/quartools
 
 # Usage
 
@@ -59,6 +59,16 @@ This is a work in progress to build a CLI interface around Vivado software for F
 1. Clean the work area
 
     Use 'make clean' to get rid of the work area to reclaim space. You may also like to do this if you have renamed or removed your sources that you may have already compiled, to expunge the compiled modules with old name from the work area.
+
+# Utilities
+
+    To run the utility commands described here add $VIVADOTOOLSDIR/bin to your PATH environment variable.
+
+    Utility commands can be run as 'vivsh <utility>' where utility is one of the following:
+
+1. listips
+
+    Lists the ips available with your installation
 
 # Wish list
 
