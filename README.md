@@ -62,9 +62,9 @@ This is a work in progress to build a CLI interface around Vivado software for F
 
 # Utilities
 
-    To run the utility commands described here add $VIVADOTOOLSDIR/bin to your PATH environment variable.
+To run the utility commands described here add $VIVADOTOOLSDIR/bin to your PATH environment variable.
 
-    Utility commands can be run as 'vivsh <utility>' where utility is one of the following:
+Utility commands can be run as 'vivsh <utility>' where utility is one of the following:
 
 1. listips
 
