@@ -74,9 +74,9 @@ Utility commands can be run as 'vivsh <utility>' where utility is one of the fol
 
     Prints help about the properties of ip identified by vlnv string (use iplist to see vlnv strings). The help includes the configurable properties and supported targets of the ip.
 
-1. ipgen <ip vlnv> <target> [ { param val } ... ]
+1. ipgen <ip vlnv> <target> <modulename> [ { param val } ... ]
 
-    Generates a given target such as testbench, examples, simulation, synthesis etc as supported by the IP. To know supported targets of IPs use iphelp. Configurable parameters of IPs are a space separated list of parameter and its value. See iphelp for a list of configurable parameters. Preferably run this script in a clean directory to see what it generated
+    Generates a given target such as testbench, examples, simulation, synthesis etc as supported by the IP with given modulename for a given ip vlnv. To know supported targets of IPs use iphelp. Configurable parameters of IPs are a space separated list of parameter and its value. See iphelp for a list of configurable parameters. Preferably run this script in a clean directory to see what it generated.
 
 # Wish list
 
