@@ -1,5 +1,5 @@
 # Preferably run this script in a clean directory to see what it generated
-if { $argc != 3 } {
+if { $argc < 3 } {
     puts "args : <ip vlnv> <supported target> <modulename> \[ {param val}...\] (see iphelp)"
     exit
     }
