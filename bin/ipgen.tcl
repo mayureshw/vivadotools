@@ -1,4 +1,7 @@
-# Preferably run this script in a clean directory to see what it generated
+# For using the ips, use the xci file generated into your SRCS variable in
+# your Makefile. Do not move the xci file as Vivado seems fussy about its
+# location
+
 if { $argc < 3 } {
     puts "args : <ip vlnv> <supported target> <modulename> \[ {param val}...\] (see iphelp)"
     exit

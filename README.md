@@ -76,7 +76,9 @@ Utility commands can be run as 'vivsh <utility>' where utility is one of the fol
 
 1. ipgen <ip vlnv> <target> <modulename> [ { param val } ... ]
 
-    Generates a given target such as testbench, examples, simulation, synthesis etc as supported by the IP with given modulename for a given ip vlnv. To know supported targets of IPs use iphelp. Configurable parameters of IPs are a space separated list of parameter and its value (e.g. CONFIG.Operation_Type Divide). See iphelp for a list of configurable parameters with default values. Refer to the IP documentation for domain of parameter values. Preferably run this script in a clean directory to see what it generated.
+    Generates a given target such as testbench, examples, simulation, synthesis etc as supported by the IP with given modulename for a given ip vlnv. To know supported targets of IPs use iphelp. Configurable parameters of IPs are a space separated list of parameter and its value (e.g. CONFIG.Operation_Type Divide). See iphelp for a list of configurable parameters with default values. Refer to the IP documentation for domain of parameter values.
+
+    For using the ips, use the xci file generated into your SRCS variable in your Makefile. Do not move the xci file as Vivado seems fussy about its location
 
 # Wish list
 
