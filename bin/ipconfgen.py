@@ -26,7 +26,7 @@ def ipfile2argstr(ipfile):
     if not isinstance(props,dict):
         print('"props" needs to be a dictionary')
         sys.exit(1)
-    return vlnv + ' all ' + ' '.join( p + ' ' + v for p,v in props.items() )
+    return vlnv + ' all ' + modulename + ' ' + ' '.join( p + ' ' + v for p,v in props.items() )
     
 
 def usage(): print(sys.argv[0],"<ipfilename>")
