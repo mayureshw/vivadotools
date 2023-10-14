@@ -9,6 +9,8 @@
 #        < dictionary of configurable properties and their values >
 #        }
 # }
+# Please use iphelp to see a list of configured parameters by default
+# To see the choices of values for each parametr please refer to ipsrc/<module>/<module.xml>
 import json
 import sys
 from pathlib import Path
