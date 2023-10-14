@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # A command line tool to convert configuration json file of an object to
 # arguments to the ipgen tool
 # json file format:
