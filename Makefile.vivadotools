@@ -45,11 +45,7 @@ VIVADOTOOLSBINDIR	=	$(VIVADOTOOLSDIR)/bin
 
 export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 
-# Using default generation location as of now. May be we want to make
-# this configurable
-# Note: the xci file will be in $(IPSRCS)/<module>/<module>.xci
-IPSRCDIR	=	.srcs/sources_1/ip
-
+IPSRCDIR	=	ipsrc
 XCIFILES	=	$(foreach IP, $(IPSRCS), $(IPSRCDIR)/$(basename $(IP))/$(IP:.ip=.xci))
 
 ifdef PACKAGE
