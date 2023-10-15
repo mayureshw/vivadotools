@@ -16,5 +16,5 @@ then
     exit 1
 fi
 
-file -L $FILE | grep -q XML && xcicat_xml.sh || xcicat_json.py
+file -L $FILE | grep -q XML && xcicat_xml.py $FILE || xcicat_json.py $FILE
 
