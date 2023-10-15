@@ -56,6 +56,10 @@ Utility commands can be run as 'vivsh <utility>' where utility is one of the fol
 
     Generates a <ipname>.vhdl file from a given dcp file produced by ipxci2dcp.
 
+1. xcicat.sh <xcifile>
+
+    Dumps component parameters and values of a configured ip (xci file) in sorted order. Supports both xml and json forms. This is typically useful for comparing two ip configurations.
+
 # Wish list
 
 - More flows and configurable options to be added over time - typically in the form of more targets to the makefile. General structure of usage of the package is likely to remain same.
