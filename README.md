@@ -56,6 +56,10 @@ Utility commands can be run as 'vivsh <utility>' where utility is one of the fol
 
     Generates a <ipname>.vhdl file from a given dcp file produced by ipxci2dcp.
 
+1. xcidiff.sh <xcfile1> <xcifile2>
+
+    Runs sdiff -s to highlight differencesa between configurable parameter valuesa of two xci files
+
 1. xcicat.sh <xcifile>
 
     Dumps component parameters and values of a configured ip (xci file) in sorted order. Supports both xml and json forms. This is typically useful for comparing two ip configurations.
