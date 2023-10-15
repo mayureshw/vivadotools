@@ -21,9 +21,6 @@ root = tree.getroot()
 
 l1 = element2dict(root)
 
-for prop in ['vendor','library','name','version']:
-    print(prop,l1[prop].text)
-
 compinst = element2dict( l1['componentInstances'][0] )
 propvals = compinst['configurableElementValues']
 for pv in propvals:
