@@ -16,7 +16,7 @@ foreach FILE $env(SRCS) {
     }
 }
 
-synth_ip [get_ips]
+synth_ip -force [get_ips]
 set_property top $TOP [get_filesets sources_1]
 if { $PARTNAME != "" } {
     synth_design -rtl -part $PARTNAME
