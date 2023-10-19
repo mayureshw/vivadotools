@@ -9,9 +9,10 @@ if { $argc < 3 } {
 set VLNV [lindex $argv 0]
 set TGT [lindex $argv 1]
 set MODULE [lindex $argv 2]
+set PARTNAME $env(PARTNAME)
 set IPSRCDIR "ipsrc"
 file mkdir $IPSRCDIR
-create_project -in_memory
+create_project -in_memory -part $PARTNAME
 create_ip -dir $IPSRCDIR -force -vlnv $VLNV -module_name $MODULE
 set PROPVALS [lrange $argv 3 end]
 if { $argc > 3 } {
