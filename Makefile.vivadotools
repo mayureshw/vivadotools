@@ -16,6 +16,11 @@
 #  - Tune the UNISIMSDIR variable in this file if different from the default
 #  - include this Makefile
 #
+# Some projects may optionally require these hooks to customize the build process
+#  pre-place.tcl: This script will be invoked prior to placing the design. An example
+#    of usage of this hook is the nitefury device, in which the LOC property has to be
+#    reset and set (see the sample project on their github page)
+#
 # To include types in the package define type declarations in ${PACKAGE}_types.vhdl
 # and do not include this file in SRCS
 #
@@ -102,7 +107,8 @@ $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
 
 define XCIRULE
 $(IPSRCDIR)/$(1)/$(1).xci:	$(1).ip
-	vivsh ipgen `ipconfgen.py $(1).ip`
+	PARTNAME=$(PARTNAME) vivsh ipgen `ipconfgen.py $(1).ip`
+
 endef
 
 $(eval $(foreach IP,$(IPSRCS),$(call XCIRULE,$(IP:.ip=))))
