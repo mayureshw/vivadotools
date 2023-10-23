@@ -51,7 +51,7 @@ VIVADOTOOLSBINDIR	=	$(VIVADOTOOLSDIR)/bin
 export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 
 IPSRCDIR	=	ipsrc
-XCIFILES	=	$(foreach IP, $(IPSRCS), $(IPSRCDIR)/$(basename $(IP))/$(IP:.ip=.xci))
+IPDCPFILES	=	$(foreach IP, $(IPSRCS), $(IPSRCDIR)/$(basename $(IP))/$(IP:.ip=.dcp))
 
 ifdef PACKAGE
 SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
@@ -59,7 +59,7 @@ else
 SRCS_W_PKG	=	$(SRCS)
 endif
 SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
-SRCS_W_XCI	=	$(SRCS_W_XDC) $(XCIFILES)
+SRCS_W_DCP	=	$(SRCS_W_XDC) $(IPDCPFILES)
 
 TYPESFILE	=	$(wildcard $(PACKAGE)_types.vhdl)
 PBODYFILE	=	$(wildcard $(PACKAGE)_pbody.vhdl)
@@ -84,8 +84,8 @@ bit: $(TOP).bit
 edif: $(TOP).edif
 package: $(PACKAGE).vhdl
 
-$(TOP).synth.dcp:	$(SRCS_W_XCI)
-	SRCS="$(SRCS_W_XCI)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
+$(TOP).synth.dcp:	$(SRCS_W_DCP)
+	SRCS="$(SRCS_W_DCP)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
 	mv vivado.log synth.log
 
 $(TOP).place.dcp:	$(TOP).synth.dcp
@@ -112,9 +112,13 @@ $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
 	vhdl2components.sh $(PACKAGE) $(SRCS) > $@
 
 define XCIRULE
+$(IPSRCDIR)/$(1)/$(1).dcp:	$(IPSRCDIR)/$(1)/$(1).xci
+	vivsh ipxci2dcp $(1).xci
+	mv vivado.log $(1).dcp.log
+
 $(IPSRCDIR)/$(1)/$(1).xci:	$(1).ip
 	PARTNAME=$(PARTNAME) vivsh ipgen `ipconfgen.py $(1).ip`
-	mv vivado.log $(1).log
+	mv vivado.log $(1).xci.log
 
 endef
 
