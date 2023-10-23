@@ -7,4 +7,4 @@ if { $argc != 1 } {
     }
 set XCIFILE [lindex $argv 0]
 read_ip $XCIFILE
-synth_ip [get_ips]
+synth_ip -force [get_ips]
