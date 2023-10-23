@@ -1,8 +1,10 @@
-set TOP  $env(TOP)
-set BITSTREAMFILE  $TOP
-append BITSTREAMFILE .bit
-set FILE2HW $env(VIVADOTOOLSDIR)
-append FILE2HW /bin/file2hw.tcl
-set argv [list $BITSTREAMFILE]
-set argc 1
-source $FILE2HW
+if { $argc != 1 } {
+    puts "args : <bin or bit file>"
+    exit
+    }
+set BITSTREAMFILE [lindex $argv 0]
+open_hw_manager
+connect_hw_server
+open_hw_target
+set_property PROGRAM.FILE $BITSTREAMFILE [current_hw_device]
+program_hw_devices

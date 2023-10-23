@@ -105,7 +105,7 @@ $(TOP).edif:	$(TOP).route.dcp
 	mv vivado.log edif.log
 
 bit2hw:	$(TOP).bit
-	TOP=$(TOP) vivsh bit2hw
+	vivsh bit2hw $<
 	mv vivado.log bit2hw.log
 
 $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
