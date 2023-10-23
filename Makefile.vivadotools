@@ -61,8 +61,8 @@ endif
 SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
 SRCS_W_XCI	=	$(SRCS_W_XDC) $(XCIFILES)
 
-TYPESFILE	=	$(PACKAGE)_types.vhdl
-PBODYFILE	=	$(PACKAGE)_pbody.vhdl
+TYPESFILE	=	$(wildcard $(PACKAGE)_types.vhdl)
+PBODYFILE	=	$(wildcard $(PACKAGE)_pbody.vhdl)
 
 GHDLOPTS	=	--std=08 -frelaxed-rules
 UNISIMSDIR	=	/opt/xilinx/Vivado/2022.2/data/vhdl/src/unisims
@@ -86,21 +86,27 @@ package: $(PACKAGE).vhdl
 
 $(TOP).synth.dcp:	$(SRCS_W_XCI)
 	SRCS="$(SRCS_W_XCI)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
+	mv vivado.log synth.log
 
 $(TOP).place.dcp:	$(TOP).synth.dcp
 	TOP=$(TOP) vivsh place
+	mv vivado.log place.log
 
 $(TOP).route.dcp:	$(TOP).place.dcp
 	TOP=$(TOP) vivsh route
+	mv vivado.log route.log
 
 $(TOP).bit:	$(TOP).route.dcp
 	TOP=$(TOP) vivsh bit
+	mv vivado.log bit.log
 
 $(TOP).edif:	$(TOP).route.dcp
 	TOP=$(TOP) vivsh edif
+	mv vivado.log edif.log
 
 bit2hw:	$(TOP).bit
 	TOP=$(TOP) vivsh bit2hw
+	mv vivado.log bit2hw.log
 
 $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
 	vhdl2components.sh $(PACKAGE) $(SRCS) > $@
@@ -108,14 +114,11 @@ $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
 define XCIRULE
 $(IPSRCDIR)/$(1)/$(1).xci:	$(1).ip
 	PARTNAME=$(PARTNAME) vivsh ipgen `ipconfgen.py $(1).ip`
+	mv vivado.log $(1).log
 
 endef
 
 $(eval $(foreach IP,$(IPSRCS),$(call XCIRULE,$(IP:.ip=))))
-
-# In case these files are absent don't treat it as an error
-$(TYPESFILE):
-$(PBODYFILE):
 
 clean:
 	rm -rf *.jou *.log .Xil
