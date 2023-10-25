@@ -113,7 +113,7 @@ $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
 
 define XCIRULE
 $(IPSRCDIR)/$(1)/$(1).dcp:	$(IPSRCDIR)/$(1)/$(1).xci
-	vivsh ipxci2dcp $(IPSRCDIR)/$(1)/$(1).xci
+	PARTNAME=$(PARTNAME) vivsh ipxci2dcp $(IPSRCDIR)/$(1)/$(1).xci
 	mv vivado.log $(1).dcp.log
 
 $(IPSRCDIR)/$(1)/$(1).xci:	$(1).ip

@@ -6,5 +6,7 @@ if { $argc != 1 } {
     exit
     }
 set XCIFILE [lindex $argv 0]
+set PARTNAME $env(PARTNAME)
+create_project -in_memory -part $PARTNAME
 read_ip $XCIFILE
 synth_ip -force [get_ips]

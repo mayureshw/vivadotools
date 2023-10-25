@@ -4,6 +4,8 @@ set PARTNAME    $env(PARTNAME)
 set DCP         $TOP
 
 append DCP .synth.dcp
+set PARTNAME $env(PARTNAME)
+create_project -in_memory -part $PARTNAME
 
 foreach FILE $env(SRCS) {
     set EXT [ file extension $FILE ]
@@ -17,13 +19,9 @@ foreach FILE $env(SRCS) {
 }
 
 set_property top $TOP [get_filesets sources_1]
-if { $PARTNAME != "" } {
-    synth_design -rtl -part $PARTNAME
-    synth_design -part $PARTNAME
-} else {
-    synth_design -rtl
-    synth_design
-    }
+# -rtl option elaborates and opens an rtl design
+synth_design -rtl
+synth_design
 # In absence of opt_design place stage anyway advises to run it
 # if undriven nets were found
 opt_design
