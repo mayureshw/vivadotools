@@ -53,6 +53,9 @@ export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 IPSRCDIR	=	ipsrc
 IPDCPFILES	=	$(foreach IP, $(IPSRCS), $(IPSRCDIR)/$(basename $(IP))/$(IP:.ip=.dcp))
 
+IPEXAMPLESDIR	=	ipexamples
+IPEXAMPLEFILES	=	$(foreach IP, $(IPSRCS), $(IPEXAMPLESDIR)/$(basename $(IP))/$(IP:.ip=.xci))
+
 ifdef PACKAGE
 SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
 else
@@ -75,7 +78,7 @@ GHDLOBJS	=	$(SRCS_W_PKG:.vhdl=.o)
 # Unfortunately no checkpoint representation for "elaboration" step
 # So we start targets from synth
 all:
-	@echo "Please specify target: synth|place|route|bit|edif|bit2hw|clean|dcpclean|package|ghdl"
+	@echo "Please specify target: synth|place|route|bit|edif|bit2hw|clean|dcpclean|package|ghdl|ipexamples"
 
 synth: $(TOP).synth.dcp
 place: $(TOP).place.dcp
@@ -83,6 +86,7 @@ route: $(TOP).route.dcp
 bit: $(TOP).bit
 edif: $(TOP).edif
 package: $(PACKAGE).vhdl
+ipexamples: $(IPEXAMPLEFILES)
 
 $(TOP).synth.dcp:	$(SRCS_W_DCP)
 	SRCS="$(SRCS_W_DCP)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
@@ -119,6 +123,10 @@ $(IPSRCDIR)/$(1)/$(1).dcp:	$(IPSRCDIR)/$(1)/$(1).xci
 $(IPSRCDIR)/$(1)/$(1).xci:	$(1).ip
 	PARTNAME=$(PARTNAME) vivsh ipgen `ipconfgen.py $(1).ip`
 	mv vivado.log $(1).xci.log
+
+$(IPEXAMPLESDIR)/$(1)/$(1).xci:	$(1).ip
+	PARTNAME=$(PARTNAME) vivsh ipexamples `ipconfgen.py $(1).ip`
+	mv vivado.log $(1).example.log
 
 endef
 
