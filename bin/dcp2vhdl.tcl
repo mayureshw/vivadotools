@@ -5,4 +5,4 @@ if { $argc != 2 } {
 set DCPFILE [lindex $argv 0]
 set VHDLFILE [lindex $argv 1]
 open_checkpoint $DCPFILE
-write_xdc -force $VHDLFILE
+write_vhdl -force $VHDLFILE
