@@ -7,6 +7,20 @@ append DCP .synth.dcp
 set PARTNAME $env(PARTNAME)
 create_project -in_memory -part $PARTNAME
 
+# Currently only vhdl libraries are supported, no technical reason for that
+foreach FILE $env(LIBSRCS) {
+    set EXT [ file extension $FILE ]
+    if { $EXT != ".vhdl" } {
+        puts "Only .vhdl extension is supported for libraries"
+        exit 1
+    }
+    set LIBNAME [file root [file tail $FILE]]
+    puts -nonewline "Processing library "
+    puts -nonewline $FILE
+    puts $LIBNAME
+    read_vhdl -vhdl2008 -library $LIBNAME $FILE
+}
+
 foreach FILE $env(SRCS) {
     set EXT [ file extension $FILE ]
     if { $EXT == ".vhdl" } {

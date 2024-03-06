@@ -9,6 +9,7 @@
 #    (make sure to not hand write file $PACKAGE.vhdl, as it will be overwritten)
 #  - Define variable SRCS (excluding $PACKAGE.vhdl, xdc files and library sources)
 #  - Define variable LIBSRCS to include external sources, these are not added to PACKAGE
+#    base name of the source file is treated as the library name
 #  - Optionally define variable XDCSRCS (.xdc files)
 #  - Optionally define variable IPSRCS (.ip files) if you are using
 #    Xilinx IPs. IP file format is documented in bin/ipconfgen.py
@@ -39,8 +40,6 @@ ifndef VIVADOINSTALLDIR
 $(error Please set environment variable VIVADOINSTALLDIR to point to vivado installation directory up to vivado version, e.g. /opt/xilinx/Vivado/2022.2)
 endif
 
-SRCS_W_LIB	=	$(SRCS) $(LIBSRCS)
-
 ifndef SRCS
 $(error In your Makefile define variable SRCS to include all .v, .vhdl, .xdc source files)
 endif
@@ -60,9 +59,9 @@ IPEXAMPLESDIR	=	ipexamples
 IPEXAMPLEFILES	=	$(foreach IP, $(IPSRCS), $(IPEXAMPLESDIR)/$(basename $(IP))/$(IP:.ip=.xci))
 
 ifdef PACKAGE
-SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS_W_LIB)
+SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
 else
-SRCS_W_PKG	=	$(SRCS_W_LIB)
+SRCS_W_PKG	=	$(SRCS)
 endif
 SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
 SRCS_W_DCP	=	$(SRCS_W_XDC) $(IPDCPFILES)
@@ -92,7 +91,7 @@ package: $(PACKAGE).vhdl
 ipexamples: $(IPEXAMPLEFILES)
 
 $(TOP).synth.dcp:	$(SRCS_W_DCP)
-	SRCS="$(SRCS_W_DCP)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
+	LIBSRCS="$(LIBSRCS)" SRCS="$(SRCS_W_DCP)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
 	mv vivado.log synth.log
 
 $(TOP).place.dcp:	$(TOP).synth.dcp
