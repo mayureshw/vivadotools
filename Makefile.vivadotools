@@ -7,7 +7,8 @@
 # In your application make flile (see examples/Makefile)
 #  - (Optionally) Define variable PACKAGE
 #    (make sure to not hand write file $PACKAGE.vhdl, as it will be overwritten)
-#  - Define variable SRCS (excluding $PACKAGE.vhdl and xdc files)
+#  - Define variable SRCS (excluding $PACKAGE.vhdl, xdc files and library sources)
+#  - Define variable LIBSRCS to include external sources, these are not added to PACKAGE
 #  - Optionally define variable XDCSRCS (.xdc files)
 #  - Optionally define variable IPSRCS (.ip files) if you are using
 #    Xilinx IPs. IP file format is documented in bin/ipconfgen.py
@@ -38,6 +39,8 @@ ifndef VIVADOINSTALLDIR
 $(error Please set environment variable VIVADOINSTALLDIR to point to vivado installation directory up to vivado version, e.g. /opt/xilinx/Vivado/2022.2)
 endif
 
+SRCS_W_LIB	=	$(SRCS) $(LIBSRCS)
+
 ifndef SRCS
 $(error In your Makefile define variable SRCS to include all .v, .vhdl, .xdc source files)
 endif
@@ -54,9 +57,9 @@ IPSRCDIR	=	ipsrc
 IPDCPFILES	=	$(foreach IP, $(IPSRCS), $(IPSRCDIR)/$(basename $(IP))/$(IP:.ip=.dcp))
 
 ifdef PACKAGE
-SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
+SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS_W_LIB)
 else
-SRCS_W_PKG	=	$(SRCS)
+SRCS_W_PKG	=	$(SRCS_W_LIB)
 endif
 SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
 SRCS_W_DCP	=	$(SRCS_W_XDC) $(IPDCPFILES)
