@@ -5,4 +5,4 @@ then
     exit 1
 fi
 
-sdiff -s  <(xcicat.sh $1) <(xcicat.sh $2)
+sdiff -st  <(xcicat.sh $1) <(xcicat.sh $2)
