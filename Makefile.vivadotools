@@ -8,6 +8,7 @@
 #  - (Optionally) Define variable PACKAGE
 #    (make sure to not hand write file $PACKAGE.vhdl, as it will be overwritten)
 #  - Define variable SRCS (excluding $PACKAGE.vhdl, xdc files and library sources)
+#  - Define variable USE2008=yes if you want to apply VHDL 2008 standard. Default is no
 #  - Define variable LIBSRCS to include external sources, these are not added to PACKAGE
 #    base name of the source file is treated as the library name
 #  - Optionally define variable XDCSRCS (.xdc files)
@@ -91,7 +92,7 @@ package: $(PACKAGE).vhdl
 ipexamples: $(IPEXAMPLEFILES)
 
 $(TOP).synth.dcp:	$(SRCS_W_DCP)
-	LIBSRCS="$(LIBSRCS)" SRCS="$(SRCS_W_DCP)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
+	USE2008=$(USE2008) LIBSRCS="$(LIBSRCS)" SRCS="$(SRCS_W_DCP)" TOP=$(TOP) PARTNAME=$(PARTNAME) vivsh synth
 	mv vivado.log synth.log
 
 $(TOP).place.dcp:	$(TOP).synth.dcp

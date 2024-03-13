@@ -2,6 +2,7 @@ set SRCS        $env(SRCS)
 set TOP         $env(TOP)
 set PARTNAME    $env(PARTNAME)
 set DCP         $TOP
+set USE2008     $env(USE2008)
 
 append DCP .synth.dcp
 set PARTNAME $env(PARTNAME)
@@ -18,13 +19,17 @@ foreach FILE $env(LIBSRCS) {
     puts -nonewline "Processing library "
     puts -nonewline $FILE
     puts $LIBNAME
-    read_vhdl -vhdl2008 -library $LIBNAME $FILE
+    read_vhdl -library $LIBNAME $FILE
 }
 
 foreach FILE $env(SRCS) {
     set EXT [ file extension $FILE ]
     if { $EXT == ".vhdl" } {
-        read_vhdl -vhdl2008 $FILE
+        if { $USE2008 == "yes" } {
+            read_vhdl -vhdl2008 $FILE
+        } else {
+            read_vhdl $FILE
+        }
     } elseif { $EXT == ".dcp" } {
         read_checkpoint $FILE
     } else {
