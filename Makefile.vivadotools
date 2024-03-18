@@ -9,6 +9,7 @@
 #    (make sure to not hand write file $PACKAGE.vhdl, as it will be overwritten)
 #  - Define variable SRCS (excluding $PACKAGE.vhdl, xdc files and library sources)
 #  - Define variable USE2008=yes if you want to apply VHDL 2008 standard. Default is no
+#  - Define variable USEUNISYM=yes to include unisim objects in ghdl simulation
 #  - Define variable LIBSRCS to include external sources, these are not added to PACKAGE
 #    base name of the source file is treated as the library name
 #  - Optionally define variable XDCSRCS (.xdc files)
@@ -75,7 +76,9 @@ ifeq ($(USE2008),yes)
 GHDLOPTS	+=	--std=08
 endif
 UNISIMSDIR	=	/opt/xilinx/Vivado/2022.2/data/vhdl/src/unisims
+ifeq ($(USEUNISYM),yes)
 UNISIMOBJS	=	unisim-obj08.cf
+endif
 GHDLOBJS	=	$(SRCS_W_PKG:.vhdl=.o)
 GHDLLIBOBJS	=	$(LIBSRCS:.vhdl=.o)
 
