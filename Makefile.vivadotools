@@ -70,13 +70,14 @@ SRCS_W_DCP	=	$(SRCS_W_XDC) $(IPDCPFILES)
 TYPESFILE	=	$(wildcard $(PACKAGE)_types.vhdl)
 PBODYFILE	=	$(wildcard $(PACKAGE)_pbody.vhdl)
 
-GHDLOPTS	=	--std=08 -frelaxed-rules
+GHDLOPTS	=	-frelaxed-rules
+ifeq ($(USE2008),yes)
+GHDLOPTS	+=	--std=08
+endif
 UNISIMSDIR	=	/opt/xilinx/Vivado/2022.2/data/vhdl/src/unisims
 UNISIMOBJS	=	unisim-obj08.cf
 GHDLOBJS	=	$(SRCS_W_PKG:.vhdl=.o)
-
-%.o:	%.vhdl
-	ghdl -a $(GHDLOPTS) $<
+GHDLLIBOBJS	=	$(LIBSRCS:.vhdl=.o)
 
 # Unfortunately no checkpoint representation for "elaboration" step
 # So we start targets from synth
@@ -148,5 +149,21 @@ $(UNISIMOBJS):
 	ghdl -a $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/unisim*.vhd
 	ghdl -a -fsynopsys $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/primitive/*.vhd
 
-$(TOP):	$(GHDLOBJS)
+$(TOP):	$(GHDLLIBOBJS) $(GHDLOBJS)
 	ghdl -m $(GHDLOPTS) $(TOP)
+
+define GHDLOBJRULE
+$(1).o: $(1).vhdl
+	ghdl -a $(GHDLOPTS) $(1).vhdl
+
+endef
+
+define GHDLLIBOBJRULE
+$(1).o: $(1).vhdl
+	ghdl -a $(GHDLOPTS) --work=$(1) $(1).vhdl
+
+endef
+
+$(eval $(foreach GHDLOBJ,$(GHDLOBJS),$(call GHDLOBJRULE,$(GHDLOBJ:.o=))))
+
+$(eval $(foreach GHDLOBJ,$(GHDLLIBOBJS),$(call GHDLLIBOBJRULE,$(GHDLOBJ:.o=))))
