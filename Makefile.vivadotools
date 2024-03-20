@@ -79,8 +79,8 @@ UNISIMSDIR	=	/opt/xilinx/Vivado/2022.2/data/vhdl/src/unisims
 ifeq ($(USEUNISYM),yes)
 UNISIMOBJS	=	unisim-obj08.cf
 endif
-GHDLOBJS	=	$(SRCS_W_PKG:.vhdl=.o)
-GHDLLIBOBJS	=	$(LIBSRCS:.vhdl=.o)
+GHDLOBJS	=	$(notdir $(SRCS_W_PKG:.vhdl=.o))
+GHDLLIBOBJS	=	$(notdir $(LIBSRCS:.vhdl=.o))
 
 # Unfortunately no checkpoint representation for "elaboration" step
 # So we start targets from synth
@@ -156,17 +156,17 @@ $(TOP):	$(GHDLLIBOBJS) $(GHDLOBJS)
 	ghdl -m $(GHDLOPTS) $(TOP)
 
 define GHDLOBJRULE
-$(1).o: $(1).vhdl
+$(notdir $(1)).o: $(1).vhdl
 	ghdl -a $(GHDLOPTS) $(1).vhdl
 
 endef
 
 define GHDLLIBOBJRULE
-$(1).o: $(1).vhdl
-	ghdl -a $(GHDLOPTS) --work=$(1) $(1).vhdl
+$(notdir $(1)).o: $(1).vhdl
+	ghdl -a $(GHDLOPTS) --work=$(notdir $(1)) $(1).vhdl
 
 endef
 
-$(eval $(foreach GHDLOBJ,$(GHDLOBJS),$(call GHDLOBJRULE,$(GHDLOBJ:.o=))))
+$(eval $(foreach SRC,$(SRCS_W_PKG),$(call GHDLOBJRULE,$(SRC:.vhdl=))))
 
-$(eval $(foreach GHDLOBJ,$(GHDLLIBOBJS),$(call GHDLLIBOBJRULE,$(GHDLOBJ:.o=))))
+$(eval $(foreach SRC,$(LIBSRCS),$(call GHDLLIBOBJRULE,$(SRC:.vhdl=))))
