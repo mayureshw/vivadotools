@@ -48,6 +48,8 @@ Utility commands can be run as 'vivsh <utility>' where utility is one of the fol
 
     For using the ips, use the xci file generated into your SRCS variable in your Makefile. Do not move the xci file as Vivado seems fussy about its location
 
+    For options available for each parameter, check the <ip>.xml in respective ip directory (see choice_list).
+
 1. ipxci2dcp <xci file>
 
     Generates a .dcp file for the ip which can be used by dcp2vhdl to generate vhdl. Such vhdl can be used only for simulation. See ipgen for generation of configured IP in the form of xci file.
