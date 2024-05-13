@@ -44,13 +44,14 @@ COMPDONE == 0 && /end component/ {
 /^ *$/ { next; }
 PORTON != 1 { next }
     {
+        gsub(":","")
         PORTNAME = $1
-        PORTDIR = $3
+        PORTDIR = $2
         gsub("--.*","")
         gsub(";.*","")
         gsub("))$",")") # hack for declarations that end hte port also
         PORTTYP=""
-        for(i=4;i<=NF;i++) PORTTYP=PORTTYP " " $i
+        for(i=3;i<=NF;i++) PORTTYP = PORTTYP=="" ? $i : PORTTYP " " $i
         print "    \"" PORTNAME "\": [ \"" PORTDIR "\", \"" PORTTYP "\" ],"
     }
     ' $PKG > $JSONFILE
