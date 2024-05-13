@@ -40,7 +40,7 @@ veo2comp()
     /INST_TAG/ { PRT=1; next }
     PRT!=1 { next }
     /\);$/ {
-        print "        dummy : out std_logic"
+        print "deletesemicolon"
         print;
         print "end component;"
         exit
@@ -62,6 +62,21 @@ veo2comp()
             porttyp = ( NF==2 ) ? "std_logic" : "std_logic_vector(" dtstr($2) ")"
             gsub( "put" , "" , portdir )
             print "        " portname , ":", portdir, porttyp ";"
+        }
+    ' |
+    awk '
+    /^deletesemicolon/ {
+        gsub(";$","",LASTLINE)
+        print(LASTLINE)
+        LASTLINE=""
+        next
+        }
+        {
+        if ( LASTLINE!="" ) print LASTLINE
+        LASTLINE = $0
+        }
+    END {
+        if ( LASTLINE!="") print LASTLINE
         }
     '
 }
