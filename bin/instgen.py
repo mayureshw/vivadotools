@@ -5,8 +5,14 @@ import json
 
 class InstGen:
 
+    def gettyp(self, instspec, portprops):
+        typ = portprops[1]
+        for param,val in instspec.get('generics',{}).items():
+            typ = typ.replace( param, str(val) )
+        return typ
+
     # iterator for tuples of signals and types, signal names in <inst>_<port> form
-    def signals(self): return [ ( '_'.join([inst,port]),portprops[1] )
+    def signals(self): return [ ( '_'.join([inst,port]),self.gettyp( instspec, portprops ) )
         for inst,instspec in self.genspec['insts'].items()
         for port,portprops in self.pkgspec[instspec['component']].items()
         ]
