@@ -120,7 +120,7 @@ bit2hw:	$(TOP).bit
 	mv vivado.log bit2hw.log
 
 $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
-	vhdl2components.sh $(PACKAGE) $(SRCS) > $@
+	vhdl2components.sh $(PACKAGE) $(SRCS) $(IPSRCS) > $@
 
 define XCIRULE
 $(IPSRCDIR)/$(1)/$(1).dcp:	$(IPSRCDIR)/$(1)/$(1).xci
