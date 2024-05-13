@@ -18,7 +18,7 @@ JSONFILE=`basename $PKG .vhdl`.json
 awk '
 BEGIN { print "{" }
 END {
-    print "\"dummy\" : {}"
+    print "deletecomma"
     print "}"
     }
 /^component/ || /^COMPONENT/ {
@@ -30,7 +30,7 @@ END {
 /^ *port *\(/ || /^ *PORT *\(/ { PORTON = 1; next }
 PORTON==1 && ( /^ *)/ || /^end component/ ) {
     PORTON = 0
-    print "    \"dummy\" : []"
+    print "deletecomma"
     print "    },"
     COMPDONE = 1
     next
@@ -54,5 +54,20 @@ PORTON != 1 { next }
         for(i=3;i<=NF;i++) PORTTYP = PORTTYP=="" ? $i : PORTTYP " " $i
         print "    \"" PORTNAME "\": [ \"" PORTDIR "\", \"" PORTTYP "\" ],"
     }
-    ' $PKG > $JSONFILE
+    ' $PKG |
+awk '
+/^deletecomma/ {
+    gsub(",$","",LASTLINE)
+    print(LASTLINE)
+    LASTLINE=""
+    next
+    }
+    {
+    if ( LASTLINE!="" ) print LASTLINE
+    LASTLINE = $0
+    }
+END {
+    if ( LASTLINE!="") print LASTLINE
+    }
+    ' > $JSONFILE
 

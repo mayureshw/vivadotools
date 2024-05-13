@@ -39,5 +39,3 @@ class InstGen:
         self.genspec = json.load( open(flnm) )
         package = self.genspec['package']
         self.pkgspec = json.load( open(package+'.json') )
-        self.pkgspec.pop('dummy',None)
-        for k,v in self.pkgspec.items(): v.pop('dummy',None)
