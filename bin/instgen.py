@@ -5,6 +5,10 @@ import json
 
 class InstGen:
 
+    def signalname(self,inst,port) : return inst+'_'+port
+
+    def bindingstr(self,d): return ',\n'.join( ' '*8 + p + ' => ' + str(v) for p,v in d.items())
+
     def gettyp(self, instspec, portprops):
         typ = portprops[1]
         for param,val in instspec.get('generics',{}).items():
@@ -12,9 +16,17 @@ class InstGen:
         return typ
 
     # iterator for tuples of signals and types, signal names in <inst>_<port> form
-    def signals(self): return [ ( '_'.join([inst,port]),self.gettyp( instspec, portprops ) )
+    def signals(self): return [ ( self.signalname(inst,port) ,self.gettyp( instspec, portprops ) )
         for inst,instspec in self.genspec['insts'].items()
         for port,portprops in self.pkgspec[instspec['component']].items()
+        ]
+
+    # iterator for tuples of instname, modulename, generic dictionary, list of port-signal pairs
+    def insts(self): return [
+        ( inst, instspec['component'], instspec.get('generics',{}), {
+            port : self.signalname(inst,port) for port in self.pkgspec[instspec['component']]
+            })
+        for inst,instspec in self.genspec['insts'].items()
         ]
 
         
