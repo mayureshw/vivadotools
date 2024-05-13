@@ -29,6 +29,11 @@ class InstGen:
         for inst,instspec in self.genspec['insts'].items()
         ]
 
+    # return iterator over instance names of a given component
+    def instancesof(self, compname): return [ inst
+        for inst,instspec in self.genspec['insts'].items() if instspec['component'] == compname
+        ]
+
         
     def __init__( self, flnm ):
         self.genspec = json.load( open(flnm) )
