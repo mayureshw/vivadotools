@@ -56,6 +56,7 @@ export	PATH			:=	$(VIVADOTOOLSBINDIR):$(VIVADOINSTALLDIR)/bin:$(PATH)
 
 IPSRCDIR	=	ipsrc
 IPDCPFILES	=	$(foreach IP, $(IPSRCS), $(IPSRCDIR)/$(basename $(IP))/$(IP:.ip=.dcp))
+IPXCIFILES	=	$(foreach IP, $(IPSRCS), $(IPSRCDIR)/$(basename $(IP))/$(IP:.ip=.xci))
 
 IPEXAMPLESDIR	=	ipexamples
 IPEXAMPLEFILES	=	$(foreach IP, $(IPSRCS), $(IPEXAMPLESDIR)/$(basename $(IP))/$(IP:.ip=.xci))
@@ -119,7 +120,7 @@ bit2hw:	$(TOP).bit
 	vivsh bit2hw $<
 	mv vivado.log bit2hw.log
 
-$(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE)
+$(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE) $(IPXCIFILES)
 	vhdl2components.sh $(PACKAGE) $(SRCS) $(IPSRCS) > $@
 
 define XCIRULE
