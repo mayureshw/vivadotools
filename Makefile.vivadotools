@@ -8,6 +8,8 @@
 #  - (Optionally) Define variable PACKAGE
 #    (make sure to not hand write file $PACKAGE.vhdl, as it will be overwritten)
 #  - Define variable SRCS (excluding $PACKAGE.vhdl, xdc files and library sources)
+#  - Define variable TSRCS with additional extension .t that use pyexpander to produce
+#    corresponding vhdl file with .t dropped
 #  - Define variable USE2008=yes if you want to apply VHDL 2008 standard. Default is no
 #  - Define variable USEUNISYM=yes to include unisim objects in ghdl simulation
 #  - Define variable LIBSRCS to include external sources, these are not added to PACKAGE
@@ -60,8 +62,10 @@ IPDCPFILES	=	$(foreach IP, $(IPSRCS), $(IPSRCDIR)/$(basename $(IP))/$(IP:.ip=.dc
 IPEXAMPLESDIR	=	ipexamples
 IPEXAMPLEFILES	=	$(foreach IP, $(IPSRCS), $(IPEXAMPLESDIR)/$(basename $(IP))/$(IP:.ip=.xci))
 
+GENSRCS	= $(TSRCS:.t=)
+
 ifdef PACKAGE
-SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS)
+SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS) $(GENSRCS)
 else
 SRCS_W_PKG	=	$(SRCS)
 endif
@@ -122,6 +126,9 @@ bit2hw:	$(TOP).bit
 $(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE) $(IPDCPFILES)
 	vhdl2components.sh $(PACKAGE) $(SRCS) $(IPSRCS) > $@
 
+$(PACKAGE).json: $(PACKAGE).vhdl
+	pkg2json.sh $<
+
 define XCIRULE
 $(IPSRCDIR)/$(1)/$(1).dcp:	$(IPSRCDIR)/$(1)/$(1).xci
 	PARTNAME=$(PARTNAME) vivsh ipxci2dcp $(IPSRCDIR)/$(1)/$(1).xci
@@ -170,3 +177,6 @@ endef
 $(eval $(foreach SRC,$(SRCS_W_PKG),$(call GHDLOBJRULE,$(SRC:.vhdl=))))
 
 $(eval $(foreach SRC,$(LIBSRCS),$(call GHDLLIBOBJRULE,$(SRC:.vhdl=))))
+
+%: %.t $(PACKAGE).json
+	expander.py $< > $@
