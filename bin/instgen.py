@@ -1,20 +1,20 @@
-#!/usr/bin/env python
-
-# Given a json file describing component instances, generate the instantiation
-# code using component description from a package file specified in the json
-# generics are specified as a dictionary (optionally) signal declarations are
-# generated automatically with <instname>_<compname> convention.
+# Given a json file describing component instances, support class that helps in
+# templatized generation of vhdl code
 
 import json
-import sys
 
-def loadjson( flnm ):
-    spec = json.load( open(flnm) )
+class InstGen:
 
-def usage():
-    print( sys.argv[0], "<instgen json file>" )
-    sys.exit(1)
+    # iterator for tuples of signals and types, signal names in <inst>_<port> form
+    def signals(self): return [ ( '_'.join([inst,port]),portprops[1] )
+        for inst,instspec in self.genspec['insts'].items()
+        for port,portprops in self.pkgspec[instspec['component']].items()
+        ]
 
-if __name__ == "__main__":
-    if len( sys.argv ) != 2 : usage()
-    loadjson( sys.argv[1] )
+        
+    def __init__( self, flnm ):
+        self.genspec = json.load( open(flnm) )
+        package = self.genspec['package']
+        self.pkgspec = json.load( open(package+'.json') )
+        self.pkgspec.pop('dummy',None)
+        for k,v in self.pkgspec.items(): v.pop('dummy',None)
