@@ -29,6 +29,10 @@ def checkvhdl( genvhdlfile, isigset ):
                 if assignedvar in assignedvarset:
                     print('duplicate assignment found:',assignedvar)
                 else: assignedvarset.add( assignedvar )
+    for var in [ var for var in assignedvarset if var not in isigset ]:
+        print('assigned but not declared',var)
+    for var in [ var for var in isigset if var not in assignedvarset ]:
+        print('declared but not assigned',var)
 
 if __name__ == '__main__':
     if len(sys.argv) != 3: usage()
