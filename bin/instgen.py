@@ -24,6 +24,12 @@ class InstGen:
         for port,portprops in self.pkgspec[instspec['component']].items()
         ]
 
+    # iterator for input signal names
+    def inpsignals(self): return [ self.signalname(inst,port)
+        for inst,instspec in self.genspec['insts'].items()
+        for port,portprops in self.pkgspec[instspec['component']].items() if portprops[0] == 'in'
+        ]
+
     # iterator for tuples of instname, modulename, generic dictionary, list of port-signal pairs
     def insts(self): return [
         ( inst, instspec['component'], instspec.get('generics',{}), {
