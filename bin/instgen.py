@@ -1,5 +1,8 @@
 # Given a json file describing component instances, support class that helps in
 # templatized generation of vhdl code
+# include ( using $include(path) ) instgen.t, supplied in this directory, in
+# your py-expander template to generate instancse as per the spec
+# typically as: $include(environ['VIVADOTOOLSDIR'] + "/bin/instgen.t")
 
 import json
 
