@@ -35,6 +35,10 @@ class InstGen:
         for port,portprops in self.pkgspec[ self.genspec['top'] ].items() if portprops[0].lower() == 'out'
         ]
 
+    # top entity outputs
+    def topinoutsignals(self): return [ port
+        for port,portprops in self.pkgspec[ self.genspec['top'] ].items() if portprops[0].lower() == 'inout'
+        ]
     # iterator for tuples of instname, modulename, generic dictionary, list of port-signal pairs
     def insts(self): return [
         ( inst, instspec['component'], instspec.get('generics',{}), {
