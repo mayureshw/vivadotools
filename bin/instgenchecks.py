@@ -15,7 +15,7 @@ def usage():
     print(sys.argv[0],'<insts json file> <generated vhdl file>')
     sys.exit(1)
 
-def checkvhdl( genvhdlfile, isigset ):
+def checkvhdl( genvhdlfile, assignableset ):
     endinstgen = False
     assignedvarset = set()
     for line in open( genvhdlfile ).readlines():
@@ -29,9 +29,9 @@ def checkvhdl( genvhdlfile, isigset ):
                 if assignedvar in assignedvarset:
                     print('duplicate assignment found:',assignedvar)
                 else: assignedvarset.add( assignedvar )
-    for var in [ var for var in assignedvarset if var not in isigset ]:
+    for var in [ var for var in assignedvarset if var not in assignableset ]:
         print('assigned but not declared',var)
-    for var in [ var for var in isigset if var not in assignedvarset ]:
+    for var in [ var for var in assignableset if var not in assignedvarset ]:
         print('declared but not assigned',var)
 
 if __name__ == '__main__':
@@ -39,5 +39,5 @@ if __name__ == '__main__':
     instgenspec = sys.argv[1]
     genvhdlfile = sys.argv[2]
     ig = InstGen( instgenspec )
-    isigset = set( ig.inpsignals() )
-    checkvhdl( genvhdlfile, isigset )
+    assignableset = set( ig.inpsignals() + ig.topopsignals() )
+    checkvhdl( genvhdlfile, assignableset )
