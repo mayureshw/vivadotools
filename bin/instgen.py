@@ -33,7 +33,7 @@ class InstGen:
     # top entity outputs
     def topopsignals(self): return [ port
         for port,portprops in self.pkgspec[ self.genspec['top'] ].items() if portprops[0].lower() == 'out'
-        ]
+        ] if self.genspec['top'] in self.pkgspec else []
 
     # iterator for tuples of instname, modulename, generic dictionary, list of port-signal pairs
     def insts(self): return [
