@@ -12,6 +12,7 @@
 #    corresponding vhdl file with .t dropped
 #  - Define variable USE2008=yes if you want to apply VHDL 2008 standard. Default is no
 #  - Define variable USEUNISYM=yes to include unisim objects in ghdl simulation
+#  - Define variable GHDLLIBOPTS to link with C libraries (e.g. -Wl,-lm to link math lib)
 #  - Define variable LIBSRCS to include external sources, these are not added to PACKAGE
 #    base name of the source file is treated as the library name
 #  - Optionally define variable XDCSRCS (.xdc files)
@@ -64,11 +65,12 @@ IPEXAMPLESDIR	=	ipexamples
 IPEXAMPLEFILES	=	$(foreach IP, $(IPSRCS), $(IPEXAMPLESDIR)/$(basename $(IP))/$(IP:.ip=.xci))
 
 GENSRCS	= $(TSRCS:.t=)
+SRCS_W_GEN = $(SRCS) $(GENSRCS)
 
 ifdef PACKAGE
-SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS) $(GENSRCS)
+SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS_W_GEN)
 else
-SRCS_W_PKG	=	$(SRCS)
+SRCS_W_PKG	=	$(SRCS_W_GEN)
 endif
 SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
 SRCS_W_DCP	=	$(SRCS_W_XDC) $(IPDCPFILES)
@@ -124,8 +126,8 @@ bit2hw:	$(TOP).bit
 	vivsh bit2hw $<
 	mv vivado.log bit2hw.log
 
-$(PACKAGE).vhdl:	$(SRCS) $(TYPESFILE) $(PBODYFILE) $(IPDCPFILES)
-	vhdl2components.sh $(PACKAGE) $(SRCS) $(IPSRCS) > $@
+$(PACKAGE).vhdl:	$(SRCS_W_GEN) $(TYPESFILE) $(PBODYFILE) $(IPDCPFILES)
+	vhdl2components.sh $(PACKAGE) $(SRCS_W_GEN) $(IPSRCS) > $@
 
 $(PACKAGE).json: $(PACKAGE).vhdl
 	pkg2json.sh $<
@@ -161,7 +163,7 @@ $(UNISIMOBJS):
 	ghdl -a -fsynopsys $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/primitive/*.vhd
 
 $(TOP):	$(GHDLLIBOBJS) $(GHDLOBJS)
-	ghdl -m $(GHDLOPTS) $(TOP)
+	ghdl -m $(GHDLLIBOPTS) $(GHDLOPTS) $(TOP)
 
 define GHDLOBJRULE
 $(notdir $(1)).o: $(1).vhdl
