@@ -28,11 +28,13 @@
 #    of usage of this hook is the nitefury device, in which the LOC property has to be
 #    reset and set (see the sample project on their github page)
 #
-# To include types in the package define type declarations in ${PACKAGE}_types.vhdl
-# and do not include this file in SRCS
+# To include types in the package define type declarations in
+# ${PACKAGE}_types.vhdl and do not include this file in SRCS. (Alternatively
+# define TYPESFILE to choose a different file.)
 #
-# To include package body in the package define package body in ${PACKAGE}_pbody.vhdl
-# and do not include this file in SRCS
+# To include package body in the package define package body in
+# ${PACKAGE}_pbody.vhdl and do not include this file in SRCS. (Alternatively
+# define PBODYFILE to choose a different file.)
 #
 # Run make with one of the supported targets. Running without target will show
 # supported targets.
@@ -75,8 +77,8 @@ endif
 SRCS_W_XDC	=	$(SRCS_W_PKG) $(XDCSRCS)
 SRCS_W_DCP	=	$(SRCS_W_XDC) $(IPDCPFILES)
 
-TYPESFILE	=	$(wildcard $(PACKAGE)_types.vhdl)
-PBODYFILE	=	$(wildcard $(PACKAGE)_pbody.vhdl)
+TYPESFILE	?=	$(wildcard $(PACKAGE)_types.vhdl)
+PBODYFILE	?=	$(wildcard $(PACKAGE)_pbody.vhdl)
 
 GHDLOPTS	=	-frelaxed-rules
 ifeq ($(USE2008),yes)
@@ -127,7 +129,7 @@ bit2hw:	$(TOP).bit
 	mv vivado.log bit2hw.log
 
 $(PACKAGE).vhdl:	$(SRCS_W_GEN) $(TYPESFILE) $(PBODYFILE) $(IPDCPFILES)
-	vhdl2components.sh $(PACKAGE) $(SRCS_W_GEN) $(IPSRCS) > $@
+	TYPESFILE=$(TYPESFILE) PBODYFILE=$(PBODYFILE) vhdl2components.sh $(PACKAGE) $(SRCS_W_GEN) $(IPSRCS) > $@
 
 $(PACKAGE).json: $(PACKAGE).vhdl
 	pkg2json.sh $<

@@ -43,7 +43,10 @@ echo
 echo package $PKGNAME is
 echo
 
-TYPESFILE=${PKGNAME}_types.vhdl
+if [ -z "$TYPESFILE" ]
+then
+    TYPESFILE=${PKGNAME}_types.vhdl
+fi
 if [ -f $TYPESFILE ]
 then
     cat $TYPESFILE
@@ -77,7 +80,10 @@ done
 
 echo "end package;"
 
-PBODYFILE=${PKGNAME}_pbody.vhdl
+if [ -z "$PBODYFILE" ]
+then
+    PBODYFILE=${PKGNAME}_pbody.vhdl
+fi
 if [ -f $PBODYFILE ]
 then
     echo
