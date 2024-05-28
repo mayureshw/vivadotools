@@ -36,6 +36,9 @@
 # ${PACKAGE}_pbody.vhdl and do not include this file in SRCS. (Alternatively
 # define PBODYFILE to choose a different file.)
 #
+# Note: TYPESFILE and PBODYFILE should not be included in your SRCS variable.
+# They are filtered out automatically if included.
+#
 # Run make with one of the supported targets. Running without target will show
 # supported targets.
 
@@ -67,7 +70,7 @@ IPEXAMPLESDIR	=	ipexamples
 IPEXAMPLEFILES	=	$(foreach IP, $(IPSRCS), $(IPEXAMPLESDIR)/$(basename $(IP))/$(IP:.ip=.xci))
 
 GENSRCS	= $(TSRCS:.t=)
-SRCS_W_GEN = $(SRCS) $(GENSRCS)
+SRCS_W_GEN = $(filter-out $(PBODYFILE) $(TYPESFILE),$(SRCS) $(GENSRCS))
 
 ifdef PACKAGE
 SRCS_W_PKG	=	$(PACKAGE).vhdl $(SRCS_W_GEN)
