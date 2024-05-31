@@ -12,8 +12,6 @@
 #    corresponding vhdl file with .t dropped
 #  - Define variable USE2008=yes if you want to apply VHDL 2008 standard. Default is no
 #  - Define variable USEUNISYM=yes to include unisim objects in ghdl simulation
-#  - Note: As of Vivado 2022, USEUNISYM is not compiling if USE2008 is set.
-#  Workaround is to temporrarily switch off USE2008 to compile unisym
 #  - Define variable GHDLLIBOPTS to link with C libraries (e.g. -Wl,-lm to link math lib)
 #  - Define variable LIBSRCS to include external sources, these are not added to PACKAGE
 #    base name of the source file is treated as the library name
@@ -165,6 +163,10 @@ dcpclean:
 ghdl:	$(TOP) $(UNISIMOBJS)
 
 # If you upgrade ghdl delete this file and build again
+# For example:
+# In /usr/pkg/lib/ghdl/vendors (or equivalent)
+# Edit config.sh to set (for example, under Xilinx vivado setting) ["InstallationDirectory"]="/opt/xilinx/Vivado/2022.2"
+# ./compile-xilinx-vivado.sh --all --vhdl2008
 $(UNISIMOBJS):
 	ghdl -a $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/unisim*.vhd
 	ghdl -a -fsynopsys $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/primitive/*.vhd
