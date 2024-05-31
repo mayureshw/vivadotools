@@ -11,7 +11,6 @@
 #  - Define variable TSRCS with additional extension .t that use pyexpander to produce
 #    corresponding vhdl file with .t dropped
 #  - Define variable USE2008=yes if you want to apply VHDL 2008 standard. Default is no
-#  - Define variable USEUNISYM=yes to include unisim objects in ghdl simulation
 #  - Define variable GHDLLIBOPTS to link with C libraries (e.g. -Wl,-lm to link math lib)
 #  - Define variable LIBSRCS to include external sources, these are not added to PACKAGE
 #    base name of the source file is treated as the library name
@@ -20,7 +19,6 @@
 #    Xilinx IPs. IP file format is documented in bin/ipconfgen.py
 #  - Define variable TOP
 #  - Define variable PARTNAME (optional)
-#  - Tune the UNISIMSDIR variable in this file if different from the default
 #  - include this Makefile
 #
 # Some projects may optionally require these hooks to customize the build process
@@ -41,6 +39,13 @@
 #
 # Run make with one of the supported targets. Running without target will show
 # supported targets.
+
+# Note on using ghdl compiled vendor libraries (such as unisym):
+# In /usr/pkg/lib/ghdl/vendors (or equivalent)
+# Edit config.sh to set (for example, under Xilinx vivado setting) ["InstallationDirectory"]="/opt/xilinx/Vivado/2022.2"
+# ./compile-xilinx-vivado.sh --all --vhdl2008
+# Soft link the requires library to your current project directory. E.g.
+# ln -s /usr/pkg/lib/ghdl/vendors/xilinx-vivado/unisim/v08/unisim-obj08.cf
 
 ifndef VIVADOTOOLSDIR
 $(error Please set environment variable VIVADOTOOLSDIR to point to vivadotools directory)
@@ -83,13 +88,13 @@ SRCS_W_DCP	=	$(SRCS_W_XDC) $(IPDCPFILES)
 TYPESFILE	?=	$(wildcard $(PACKAGE)_types.vhdl)
 PBODYFILE	?=	$(wildcard $(PACKAGE)_pbody.vhdl)
 
-GHDLOPTS	=	-frelaxed-rules
+GHDLOPTS_BUILTIN	=	-frelaxed
+
+# strangely ghdl requires --std=08 to be the first option, hence this arrangement instead of +=
 ifeq ($(USE2008),yes)
-GHDLOPTS	+=	--std=08
-endif
-UNISIMSDIR	=	/opt/xilinx/Vivado/2022.2/data/vhdl/src/unisims
-ifeq ($(USEUNISYM),yes)
-UNISIMOBJS	=	unisim-obj08.cf
+GHDLOPTS	=	--std=08 $(GHDLOPTS_BUILTIN)
+else
+GHDLOPTS	=	$(GHDLOPTS_BUILTIN)
 endif
 GHDLOBJS	=	$(notdir $(SRCS_W_PKG:.vhdl=.o))
 GHDLLIBOBJS	=	$(notdir $(LIBSRCS:.vhdl=.o))
@@ -160,16 +165,7 @@ clean:
 dcpclean:
 	rm -f *.dcp *.bit
 
-ghdl:	$(TOP) $(UNISIMOBJS)
-
-# If you upgrade ghdl delete this file and build again
-# For example:
-# In /usr/pkg/lib/ghdl/vendors (or equivalent)
-# Edit config.sh to set (for example, under Xilinx vivado setting) ["InstallationDirectory"]="/opt/xilinx/Vivado/2022.2"
-# ./compile-xilinx-vivado.sh --all --vhdl2008
-$(UNISIMOBJS):
-	ghdl -a $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/unisim*.vhd
-	ghdl -a -fsynopsys $(GHDLOPTS) --work=unisim $(UNISIMSDIR)/primitive/*.vhd
+ghdl:	$(TOP)
 
 $(TOP):	$(GHDLLIBOBJS) $(GHDLOBJS)
 	ghdl -m $(GHDLLIBOPTS) $(GHDLOPTS) $(TOP)
