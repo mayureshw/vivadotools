@@ -40,7 +40,7 @@
 # Run make with one of the supported targets. Running without target will show
 # supported targets.
 
-# Note on using ghdl compiled vendor libraries (such as unisym):
+# Note on using ghdl compiled vendor libraries (such as unisim):
 # In /usr/pkg/lib/ghdl/vendors (or equivalent)
 # Edit config.sh to set (for example, under Xilinx vivado setting) ["InstallationDirectory"]="/opt/xilinx/Vivado/2022.2"
 # ./compile-xilinx-vivado.sh --all --vhdl2008
