@@ -41,7 +41,7 @@ set_property top $TOP [get_filesets sources_1]
 # -rtl option elaborates and opens an rtl design
 synth_design -rtl
 synth_design
-# In absence of opt_design place stage anyway advises to run it
-# if undriven nets were found
-opt_design
+# In absence of opt_design place stage advises to run it if undriven nets were
+# found. Not enabled by default
+# opt_design
 write_checkpoint -force $DCP
