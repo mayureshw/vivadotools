@@ -167,6 +167,9 @@ dcpclean:
 
 ghdl:	$(TOP)
 
+ghdlsynth:	$(TOP)
+	ghdl --synth $(GHDLOPTS) $(SRCS_W_PKG) $(LIBSRCS) -e $(TOP)
+
 $(TOP):	$(GHDLLIBOBJS) $(GHDLOBJS)
 	ghdl -m $(GHDLLIBOPTS) $(GHDLOPTS) $(TOP)
 
