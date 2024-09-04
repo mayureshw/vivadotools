@@ -38,7 +38,8 @@
 # They are filtered out automatically if included.
 #
 # Run make with one of the supported targets. Running without target will show
-# supported targets.
+# supported targets. Note the last target is to generate a verilog netlist for
+# the respective checkpoint identified by the target pattern.
 
 # Note on using ghdl compiled vendor libraries (such as unisim):
 # In /usr/pkg/lib/ghdl/vendors (or equivalent)
@@ -102,7 +103,7 @@ GHDLLIBOBJS	=	$(notdir $(LIBSRCS:.vhdl=.o))
 # Unfortunately no checkpoint representation for "elaboration" step
 # So we start targets from synth
 all:
-	@echo "Please specify target: synth|place|route|bit|edif|bit2hw|clean|dcpclean|package|ghdl|ipexamples"
+	@echo "Please specify target: synth|place|route|bit|edif|bit2hw|clean|dcpclean|package|ghdl|ipexamples|<top>.<synth|place|route>.v"
 
 synth: $(TOP).synth.dcp
 place: $(TOP).place.dcp
@@ -195,3 +196,6 @@ $(eval $(foreach SRC,$(LIBSRCS),$(call GHDLLIBOBJRULE,$(SRC:.vhdl=))))
 
 %: %.t $(PACKAGE).json
 	expander.py $< > $@
+
+$(TOP).%.v: $(TOP).%.dcp
+	TOP=$(TOP) vivsh dcp2verilog $< $@
