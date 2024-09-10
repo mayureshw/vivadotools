@@ -90,6 +90,7 @@ TYPESFILE	?=	$(wildcard $(PACKAGE)_types.vhdl)
 PBODYFILE	?=	$(wildcard $(PACKAGE)_pbody.vhdl)
 
 GHDLOPTS_BUILTIN	=	-frelaxed
+GHDLSYNTHOPTS		=	--latches
 
 # strangely ghdl requires --std=08 to be the first option, hence this arrangement instead of +=
 ifeq ($(USE2008),yes)
@@ -170,10 +171,10 @@ ghdl:	$(TOP)
 
 # gsynth and ysynth are experimental. ghdl synthesis does not supprot case-when generate
 gsynth:	$(TOP)
-	ghdl --synth $(GHDLOPTS) $(SRCS_W_PKG) $(LIBSRCS) -e $(TOP)
+	ghdl --synth $(GHDLSYNTHOPTS) $(GHDLOPTS) $(SRCS_W_PKG) $(LIBSRCS) -e $(TOP)
 
 ysynth: $(TOP)
-	yosys -m ghdl -p 'ghdl $(GHDLOPTS) $(SRCS_W_PKG) $(LIBSRCS) -e $(TOP); write_verilog $(TOP).synth.v'
+	yosys -m ghdl -p 'ghdl $(GHDLSYNTHOPTS) $(GHDLOPTS) $(SRCS_W_PKG) $(LIBSRCS) -e $(TOP); write_verilog $(TOP).synth.v'
 
 $(TOP):	$(GHDLLIBOBJS) $(GHDLOBJS)
 	ghdl -m $(GHDLLIBOPTS) $(GHDLOPTS) $(TOP)
