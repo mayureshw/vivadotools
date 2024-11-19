@@ -44,7 +44,8 @@
 # Note on using ghdl compiled vendor libraries (such as unisim):
 # In /usr/pkg/lib/ghdl/vendors (or equivalent)
 # Edit config.sh to set (for example, under Xilinx vivado setting) ["InstallationDirectory"]="/opt/xilinx/Vivado/2022.2"
-# ./compile-xilinx-vivado.sh --all --vhdl2008
+# ./compile-xilinx-vivado.sh --unisim --vhdl2008
+# (If you want to build all libraries: ./compile-xilinx-vivado.sh --all --vhdl2008)
 # Soft link the requires library to your current project directory. E.g.
 # ln -s /usr/pkg/lib/ghdl/vendors/xilinx-vivado/unisim/v08/unisim-obj08.cf
 
